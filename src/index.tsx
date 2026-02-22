@@ -27,16 +27,19 @@ app.get('/', async (c) => {
   if (!accountId || !apiToken) {
     return c.html(
       <Layout title="Configuration Error">
-        <div class="bg-red-50 border-l-4 border-red-400 p-4">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        <div class="border border-red-900/50 bg-red-950/20 p-6 rounded-none">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 text-red-500 mt-1">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
-            <div class="ml-3">
-              <p class="text-sm text-red-700">
-                Please set CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN environment variables.
+            <div>
+              <h3 class="text-red-500 font-mono text-lg mb-2">SYSTEM ALERT: MISSING CREDENTIALS</h3>
+              <p class="text-red-400/80 font-mono text-sm leading-relaxed">
+                Environment variables CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN are not set.
+                <br/>
+                Please configure secrets in your deployment environment.
               </p>
             </div>
           </div>
@@ -58,9 +61,10 @@ app.get('/', async (c) => {
     return c.html(<Dashboard projects={sortedProjects} />);
   } catch (err: any) {
     return c.html(
-      <Layout title="Error">
-         <div class="bg-red-50 border-l-4 border-red-400 p-4">
-            <p class="text-red-700">Error fetching projects: {err.message}</p>
+      <Layout title="System Error">
+         <div class="border border-red-900/50 bg-red-950/20 p-6">
+            <h3 class="text-red-500 font-mono text-lg mb-2">API CONNECTION FAILURE</h3>
+            <p class="text-red-400/80 font-mono text-sm">Error fetching projects: {err.message}</p>
          </div>
       </Layout>
     );
@@ -85,19 +89,35 @@ async function fetchProjects(accountId: string, apiToken: string): Promise<Proje
 
 const Layout = (props: { title: string; children: any }) => html`
   <!DOCTYPE html>
-  <html lang="en">
+  <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${props.title} - My Pages Hub</title>
+    <title>${props.title} // FLIGHT DECK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
+            fontFamily: {
+              mono: ['"JetBrains Mono"', 'monospace'],
+              sans: ['"JetBrains Mono"', 'monospace'], // Force mono everywhere
+            },
             colors: {
-              brand: '#f6821f', // Cloudflare Orange-ish
+              zinc: {
+                850: '#1f1f22',
+                950: '#09090b', 
+              },
+              neon: {
+                green: '#10b981',
+                amber: '#f59e0b',
+                red: '#ef4444',
+              }
             }
           }
         }
@@ -105,24 +125,44 @@ const Layout = (props: { title: string; children: any }) => html`
     </script>
     <style>
       [x-cloak] { display: none !important; }
-      .project-card { transition: all 0.2s ease-in-out; }
-      .project-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: #f1f1f1; }
-      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      body { background-color: #09090b; color: #e4e4e7; }
+      
+      /* Custom Scrollbar - Minimal & Dark */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: #09090b; }
+      ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 0; }
+      ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+      /* Utilities */
+      .border-panel { border: 1px solid #27272a; }
+      .bg-panel { background-color: #09090b; }
+      .hover-panel:hover { border-color: #3f3f46; background-color: #101012; }
+      
+      /* Grid Pattern Overlay */
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, #18181b 1px, transparent 1px),
+                          linear-gradient(to bottom, #18181b 1px, transparent 1px);
+      }
     </style>
-    <!-- Alpine.js for interactivity -->
+    <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
-  <body class="bg-slate-50 text-slate-900 min-h-screen font-sans antialiased">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <body class="min-h-screen font-mono antialiased selection:bg-neon-green selection:text-black bg-grid">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
       ${props.children}
     </div>
-    <footer class="mt-12 text-center text-slate-400 text-sm py-6 border-t border-slate-200">
-      <p>Built with Hono & Cloudflare Workers</p>
+    
+    <footer class="mt-20 border-t border-zinc-800 py-8 text-center text-zinc-600 text-xs uppercase tracking-widest relative z-10">
+      <div class="flex items-center justify-center gap-4">
+        <span>SYS.STATUS: ONLINE</span>
+        <span class="text-zinc-800">|</span>
+        <span>VER: 1.0.0-BETA</span>
+        <span class="text-zinc-800">|</span>
+        <span>${new Date().toISOString().split('T')[0]}</span>
+      </div>
     </footer>
+
     <script>
       lucide.createIcons();
     </script>
@@ -135,6 +175,7 @@ const Dashboard = ({ projects }: { projects: Project[] }) => html`
     <script>
       window.PROJECTS_DATA = ${raw(JSON.stringify(projects))};
     </script>
+
     <div x-data="{ 
       search: '', 
       starred: JSON.parse(localStorage.getItem('starred_projects') || '[]'),
@@ -157,20 +198,33 @@ const Dashboard = ({ projects }: { projects: Project[] }) => html`
         const term = this.search.toLowerCase();
         let filtered = this.projects.filter(p => p.name.toLowerCase().includes(term));
         
-        // Sort: Starred first, then by date (already sorted by date from server)
         return filtered.sort((a, b) => {
           const aStarred = this.isStarred(a.name);
           const bStarred = this.isStarred(b.name);
           if (aStarred && !bStarred) return -1;
           if (!aStarred && bStarred) return 1;
-          return 0; // Keep original sort order (date)
+          return 0; 
         });
       },
       
       formatDate(dateStr) {
-        if (!dateStr) return 'Never deployed';
+        if (!dateStr) return 'NO_DEPLOY';
         const date = new Date(dateStr);
-        return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }).format(date);
+        // Format: YYYY-MM-DD HH:MM
+        return date.toISOString().replace('T', ' ').substring(0, 16);
+      },
+
+      formatDateRelative(dateStr) {
+        if (!dateStr) return 'NEVER';
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diffMs = now.getTime() - date.getTime();
+        const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+        
+        if (diffHrs < 1) return '< 1H AGO';
+        if (diffHrs < 24) return \`\${diffHrs}H AGO\`;
+        const diffDays = Math.floor(diffHrs / 24);
+        return \`\${diffDays}D AGO\`;
       },
       
       getProjectUrl(project) {
@@ -185,78 +239,88 @@ const Dashboard = ({ projects }: { projects: Project[] }) => html`
     }">
       
       <!-- Header -->
-      <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
-        <div>
-          <h1 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
-            <i data-lucide="cloud" class="w-8 h-8 text-brand"></i>
-            My Pages Hub
-          </h1>
-          <p class="text-slate-500 mt-1">Manage and access all your Cloudflare Pages deployments</p>
-        </div>
-        
-        <div class="relative w-full md:w-96">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <i data-lucide="search" class="h-5 w-5 text-slate-400"></i>
+      <header class="mb-16 border-b border-zinc-800 pb-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div>
+            <div class="flex items-center gap-3 text-neon-green mb-2">
+              <i data-lucide="terminal" class="w-5 h-5"></i>
+              <span class="text-xs font-bold tracking-[0.2em] uppercase">Control Plane</span>
+            </div>
+            <h1 class="text-4xl font-bold text-white tracking-tight uppercase">
+              Deployments<span class="text-zinc-600">.LOG</span>
+            </h1>
           </div>
-          <input 
-            x-model="search"
-            type="text" 
-            class="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg leading-5 bg-white placeholder-slate-500 focus:outline-none focus:placeholder-slate-400 focus:ring-1 focus:ring-brand focus:border-brand sm:text-sm shadow-sm transition-all" 
-            placeholder="Search projects..."
-          >
+          
+          <div class="w-full md:w-96 relative group">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i data-lucide="search" class="h-4 w-4 text-zinc-500 group-focus-within:text-neon-green transition-colors"></i>
+            </div>
+            <input 
+              x-model="search"
+              type="text" 
+              class="block w-full pl-10 pr-3 py-3 bg-zinc-900 border border-zinc-800 text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-neon-green focus:ring-1 focus:ring-neon-green transition-all text-sm font-mono uppercase tracking-wide" 
+              placeholder="FILTER_BY_NAME..."
+            >
+          </div>
         </div>
-      </div>
+      </header>
 
       <!-- Projects Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-zinc-800 border border-zinc-800">
         <template x-for="project in filteredProjects" :key="project.name">
-          <div class="project-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full relative group">
+          <div class="bg-panel p-6 flex flex-col h-full relative group hover:bg-zinc-850 transition-colors">
             
-            <!-- Star Button -->
-            <button 
-              @click.prevent="toggleStar(project.name)"
-              class="absolute top-4 right-4 z-10 p-1.5 rounded-full hover:bg-slate-100 transition-colors focus:outline-none"
-              :class="{ 'text-yellow-400': isStarred(project.name), 'text-slate-300 group-hover:text-slate-400': !isStarred(project.name) }"
-            >
-              <i data-lucide="star" class="w-5 h-5 fill-current"></i>
-            </button>
-
-            <div class="p-6 flex-1 flex flex-col">
-              <div class="flex items-center justify-between mb-2 pr-8"> <!-- pr-8 to avoid overlap with star -->
-                <h3 class="text-lg font-semibold text-slate-900 truncate" x-text="project.name"></h3>
+            <!-- Header: Name + Star -->
+            <div class="flex justify-between items-start mb-6">
+              <div>
+                <h3 class="text-lg font-bold text-white tracking-wide" x-text="project.name"></h3>
+                <a :href="getProjectUrl(project)" target="_blank" class="text-xs text-zinc-500 hover:text-neon-green transition-colors flex items-center gap-1.5 mt-1 truncate max-w-[200px]">
+                  <span x-text="getProjectUrl(project).replace('https://', '')"></span>
+                  <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
               </div>
               
-              <div class="mb-4">
-                 <a :href="getProjectUrl(project)" target="_blank" class="text-sm text-brand hover:text-orange-600 font-medium hover:underline flex items-center gap-1 break-all">
-                    <span x-text="getProjectUrl(project).replace('https://', '')"></span>
-                    <i data-lucide="external-link" class="w-3 h-3"></i>
-                 </a>
-              </div>
+              <button 
+                @click.prevent="toggleStar(project.name)"
+                class="p-1.5 -mr-2 -mt-2 text-zinc-700 hover:text-yellow-500 transition-colors focus:outline-none"
+                :class="{ 'text-yellow-500': isStarred(project.name) }"
+              >
+                <i data-lucide="star" class="w-4 h-4" :fill="isStarred(project.name) ? 'currentColor' : 'none'"></i>
+              </button>
+            </div>
 
-              <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                <div class="flex items-center gap-1.5" :title="project.latest_deployment?.created_on">
-                  <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-                  <span x-text="formatDate(project.latest_deployment?.created_on || project.created_on)"></span>
-                </div>
-                
-                <div class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700 border border-green-200">
-                  Active
+            <!-- Status Indicators -->
+            <div class="mt-auto grid grid-cols-2 gap-4 border-t border-zinc-800/50 pt-4">
+              <div>
+                <div class="text-[10px] text-zinc-600 uppercase tracking-wider mb-1">Last Deploy</div>
+                <div class="text-xs text-zinc-300 font-medium" x-text="formatDateRelative(project.latest_deployment?.created_on || project.created_on)"></div>
+              </div>
+              
+              <div>
+                <div class="text-[10px] text-zinc-600 uppercase tracking-wider mb-1">Status</div>
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-neon-green shadow-[0_0_8px_rgba(16,185,129,0.4)]"></span>
+                  <span class="text-xs text-neon-green font-medium tracking-wide">ACTIVE</span>
                 </div>
               </div>
             </div>
             
-            <!-- Quick Actions (optional, maybe link to dash in future) -->
-            <!-- <div class="bg-slate-50 px-6 py-3 border-t border-slate-100"></div> -->
+            <!-- Technical Detail (Full timestamp on hover/visible) -->
+            <div class="mt-3 text-[10px] text-zinc-700 font-mono truncate" x-text="project.latest_deployment?.created_on || project.created_on"></div>
+
+            <!-- Decorative corner accent -->
+            <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
         </template>
         
         <!-- Empty State -->
-        <div x-show="filteredProjects.length === 0" class="col-span-full py-12 text-center" x-cloak>
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
-            <i data-lucide="search-x" class="w-8 h-8 text-slate-400"></i>
+        <div x-show="filteredProjects.length === 0" class="col-span-full py-24 text-center bg-panel" x-cloak>
+          <div class="inline-flex items-center justify-center w-12 h-12 border border-zinc-800 bg-zinc-900 mb-6">
+            <i data-lucide="terminal" class="w-6 h-6 text-zinc-600"></i>
           </div>
-          <h3 class="text-lg font-medium text-slate-900">No projects found</h3>
-          <p class="text-slate-500 mt-1">Try adjusting your search terms.</p>
+          <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-widest">No Signals Found</h3>
+          <p class="text-zinc-600 text-xs mt-2 font-mono">Adjust search parameters.</p>
         </div>
       </div>
 
