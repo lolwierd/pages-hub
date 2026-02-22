@@ -125,7 +125,7 @@ const Layout = (props: { title: string; children: any }) => html`
     </script>
     <style>
       [x-cloak] { display: none !important; }
-      body { background-color: #09090b; color: #e4e4e7; }
+      body { background-color: #09090b; color: #e4e4e7; margin: 0; }
       
       /* Custom Scrollbar - Minimal & Dark */
       ::-webkit-scrollbar { width: 6px; }
@@ -143,12 +143,14 @@ const Layout = (props: { title: string; children: any }) => html`
         background-size: 40px 40px;
         background-image: linear-gradient(to right, #18181b 1px, transparent 1px),
                           linear-gradient(to bottom, #18181b 1px, transparent 1px);
+        background-color: #09090b;
+        min-height: 100vh;
       }
     </style>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
-  <body class="min-h-screen font-mono antialiased selection:bg-neon-green selection:text-black bg-grid">
+  <body class="min-h-screen font-mono antialiased selection:bg-neon-green selection:text-black bg-grid bg-[#09090b] text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
       ${props.children}
     </div>
