@@ -2,10 +2,10 @@ name = "pages-hub"
 main = "src/index.tsx"
 compatibility_date = "2024-04-01"
 
-[vars]
-# You will need to set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID as secrets in Cloudflare Dashboard
-# Or for local dev via .dev.vars
-
 routes = [
   { pattern = "pages.lolwierd.com", custom_domain = true }
 ]
+
+[vars]
+# You will need to set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID as secrets in Cloudflare Dashboard
+# Or for local dev via .dev.vars

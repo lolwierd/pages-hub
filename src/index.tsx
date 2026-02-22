@@ -106,7 +106,7 @@ const Layout = (props: { title: string; children: any }) => html`
           extend: {
             fontFamily: {
               mono: ['"JetBrains Mono"', 'monospace'],
-              sans: ['"JetBrains Mono"', 'monospace'], // Force mono everywhere
+              sans: ['"JetBrains Mono"', 'monospace'], 
             },
             colors: {
               zinc: {
