@@ -6,6 +6,10 @@ routes = [
   { pattern = "pages.lolwierd.com", custom_domain = true }
 ]
 
+[[kv_namespaces]]
+binding = "CACHE"
+id = "87927a0ce8a34bb98d5804631813e4c6"
+
 [vars]
 # You will need to set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID as secrets in Cloudflare Dashboard
 # Or for local dev via .dev.vars
