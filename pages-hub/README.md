@@ -50,8 +50,8 @@ You need a Cloudflare account with API access.
 
 ## configuration
 
-The worker is configured in `wrangler.toml`.
-To deploy to a custom domain (e.g., `pages.lolwierd.com`), add a route or custom domain configuration:
+The worker is configured in `wrangler.toml` to deploy to `pages.lolwierd.com`.
+Ensure `pages.lolwierd.com` is pointing to your worker in Cloudflare DNS (or use `custom_domain = true` which handles it if the zone is in your account).
 
 ```toml
 # wrangler.toml
@@ -61,4 +61,3 @@ routes = [
   { pattern = "pages.lolwierd.com", custom_domain = true }
 ]
 ```
-(Make sure `pages.lolwierd.com` is a valid DNS record in your Cloudflare zone pointing to the worker, or use the `custom_domain = true` feature which handles it automatically if the zone is in Cloudflare).
