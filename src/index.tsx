@@ -94,7 +94,7 @@ const Layout = (props: { title: string; children: any }) => html`
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${props.title} // FLIGHT DECK</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -125,7 +125,7 @@ const Layout = (props: { title: string; children: any }) => html`
     </script>
     <style>
       [x-cloak] { display: none !important; }
-      body { background-color: #09090b; color: #e4e4e7; margin: 0; }
+      body { background-color: #09090b !important; color: #e4e4e7 !important; margin: 0; }
       
       /* Custom Scrollbar - Minimal & Dark */
       ::-webkit-scrollbar { width: 6px; }
@@ -143,7 +143,7 @@ const Layout = (props: { title: string; children: any }) => html`
         background-size: 40px 40px;
         background-image: linear-gradient(to right, #18181b 1px, transparent 1px),
                           linear-gradient(to bottom, #18181b 1px, transparent 1px);
-        background-color: #09090b;
+        background-color: #09090b !important;
         min-height: 100vh;
       }
     </style>
